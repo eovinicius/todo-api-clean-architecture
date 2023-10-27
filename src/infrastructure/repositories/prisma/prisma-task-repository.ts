@@ -18,8 +18,8 @@ export class PrismaTaskRepository implements TaskRepository {
 
     return task;
   }
-  async update(task: Task): Promise<void> {
-    throw new Error('Method not implemented.');
+  async update(data: Task): Promise<void> {
+    await prisma.task.update({ where: { id: data.id }, data });
   }
   async delete(id: string): Promise<void> {
     throw new Error('Method not implemented.');
