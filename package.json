@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx --watch src/http/server.ts",
+    "dev": "tsx --watch src/infrastructure/http/server.ts",
     "test": "vitest --watch",
     "test:coverage": "vitest --coverage"
   },

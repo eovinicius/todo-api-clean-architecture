@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { AppError } from '../../application/error/app-error';
+import { AppError } from '../../../application/error/app-error';
+
 
 export class ErrorMiddleware {
   static handleError(error: Error, req: Request, res: Response, next: NextFunction) {

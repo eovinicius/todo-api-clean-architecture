@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
-import { AppError } from '../../application/error/app-error';
+import { AppError } from '../../../application/error/app-error';
+
 
 interface IPayload {
   iat: number;
