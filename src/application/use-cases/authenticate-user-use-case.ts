@@ -3,24 +3,24 @@ import { UserRepository } from '../repositories/user-repository';
 import { CryptoProvider } from '../providers/crypto-provider';
 import { User } from '../../domain/entities/user';
 
-interface IRequest {
+interface AuthenticateUserUseCaseRequest {
   email: string;
   password: string;
 }
 
-interface IResponse {
+interface AuthenticateUserUseCaseResponse {
   user: User;
 }
 
 export class AuthenticateUserUseCase {
   constructor(private userRepository: UserRepository, private cryptoProvider: CryptoProvider) {}
 
-  async execute(data: IRequest): Promise<IResponse> {
-    const user = await this.userRepository.findByEmail(data.email);
+  async execute({ email, password }: AuthenticateUserUseCaseRequest): Promise<AuthenticateUserUseCaseResponse> {
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) throw new AppError(400, 'email or password incorrect');
 
-    const doesPasswordsMatch = await this.cryptoProvider.compare(data.password, user.password);
+    const doesPasswordsMatch = await this.cryptoProvider.compare(password, user.password);
 
     if (!doesPasswordsMatch) throw new AppError(400, 'email or password incorrect');
 

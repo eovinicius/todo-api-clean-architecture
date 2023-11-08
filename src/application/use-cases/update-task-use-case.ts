@@ -1,26 +1,25 @@
 import { AppError } from '../error/app-error';
 import { TaskRepository } from '../repositories/task-repository';
 
-interface IRequest {
-  id: string;
+interface UpdateTaskUseCaseRequest {
+  UserId: string;
   title: string;
-  completed: boolean;
 }
+
+interface UpdateTaskUseCaseResponse {}
 
 export class UpdateTaskUseCase {
   constructor(private taskRepository: TaskRepository) {}
 
-  async execute(data: IRequest): Promise<void> {
-    const taskAlreadyExists = await this.taskRepository.findById(data.id);
+  async execute({ UserId, title }: UpdateTaskUseCaseRequest): Promise<UpdateTaskUseCaseResponse> {
+    const task = await this.taskRepository.findById(UserId);
 
-    if (!taskAlreadyExists) throw new AppError(400, 'task not found');
+    if (!task) throw new AppError(400, 'task not found');
 
-    const { id, title = taskAlreadyExists.title, completed = taskAlreadyExists.completed } = data;
+    task.title = title;
 
-    await this.taskRepository.update({
-      id,
-      title,
-      completed,
-    });
+    await this.taskRepository.save(task);
+
+    return {};
   }
 }

@@ -1,15 +1,39 @@
-import { randomUUID } from 'crypto';
+import { Entity } from '../../core/entity';
+import { Optional } from '../../core/types/optional';
 
-export class User {
-  public id: string = randomUUID();
-  public name: string;
-  public email: string;
-  public password: string;
-  public createdAt: Date = new Date();
+interface UserProps {
+  name: string;
+  email: string;
+  password: string;
+  createdAt: Date;
+}
 
-  constructor(data: { name: string; email: string; password: string }) {
-    this.name = data.name;
-    this.email = data.email;
-    this.password = data.password;
+export class User extends Entity<UserProps> {
+  public static create(props: Optional<UserProps, 'createdAt'>, id?: string) {
+    const user = new User(
+      {
+        ...props,
+        createdAt: new Date(),
+      },
+      id,
+    );
+
+    return user;
+  }
+
+  get name(): string {
+    return this.props.name;
+  }
+
+  set name(name: string) {
+    this.props.name = name;
+  }
+
+  get email(): string {
+    return this.props.email;
+  }
+
+  get password(): string {
+    return this.props.password;
   }
 }

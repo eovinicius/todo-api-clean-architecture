@@ -3,27 +3,29 @@ import { AppError } from '../error/app-error';
 import { CryptoProvider } from '../providers/crypto-provider';
 import { UserRepository } from '../repositories/user-repository';
 
-interface IRequest {
+interface RegisterUserUseCaseRequest {
   name: string;
   email: string;
   password: string;
 }
 
-interface IResponse {
+interface RegisterUserUseCaseResponse {
   user: User;
 }
 
 export class RegisterUserUseCase {
   constructor(private userRepository: UserRepository, private cryptoProvider: CryptoProvider) {}
 
-  async execute(data: IRequest): Promise<IResponse> {
-    if (await this.userRepository.findByEmail(data.email)) throw new AppError(400, 'email already registered');
+  async execute({ name, email, password }: RegisterUserUseCaseRequest): Promise<RegisterUserUseCaseResponse> {
+    if (await this.userRepository.findByEmail(email)) throw new AppError(400, 'email already registered');
 
-    const passwordhash = await this.cryptoProvider.hash(data.password);
+    const hashedPassoword = await this.cryptoProvider.hash(password);
 
-    const user = new User(data);
-
-    user.password = passwordhash;
+    const user = User.create({
+      name,
+      email,
+      password: hashedPassoword,
+    });
 
     await this.userRepository.register(user);
 

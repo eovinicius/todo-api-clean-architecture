@@ -3,35 +3,29 @@ import { UserRepository } from '../repositories/user-repository';
 import { Task } from '../../domain/entities/tasks';
 import { TaskRepository } from '../repositories/task-repository';
 
-interface IRequest {
+interface CreateTaskUseCaseRequest {
   userId: string;
   title: string;
 }
 
-interface IResponse {
-  title: string;
-  completed: Boolean;
-  createdAt: Date;
+interface CreateTaskUseCaseResponse {
+  task: Task;
 }
 
 export class CreateTaskUseCase {
   constructor(private userRepository: UserRepository, private taskRepository: TaskRepository) {}
 
-  async execute({ title, userId }: IRequest): Promise<IResponse> {
+  async execute({ title, userId }: CreateTaskUseCaseRequest): Promise<CreateTaskUseCaseResponse> {
     const user = await this.userRepository.findById(userId);
 
     if (!user) throw new AppError(400, 'user not found');
 
-    const task = new Task({ title, userId });
+    const task = Task.create({ title, userId });
 
     await this.taskRepository.create(task);
 
-    const responseTask = {
-      title: task.title,
-      completed: task.completed,
-      createdAt: task.createdAt,
+    return {
+      task,
     };
-
-    return responseTask;
   }
 }
