@@ -1,8 +1,9 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import { AuthenticateUserUseCase } from './authenticate-user-use-case';
 import { AppError } from '../error/app-error';
-import { InMemoryUserRepository } from '../../test/repositories/in-memory-user-repository';
 import { BcryptCryptoProvider } from '../../infrastructure/providers/bcrypt-crypto-provider';
+import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user-repository';
+import { User } from '../../domain/entities/user';
 
 let userRepository: InMemoryUserRepository;
 let cryptoProvider: BcryptCryptoProvider;
@@ -18,13 +19,14 @@ describe('Authenticate Use Case', () => {
   it('Should be able to authenticate', async () => {
     const passwordHash = await cryptoProvider.hash('12345');
 
-    await userRepository.register({
-      id: '01',
-      name: 'john',
-      email: 'john@doe.com',
+    const newUser = User.create({
+      name: 'vinicius',
+      email: 'vinicius@mail.com',
       password: passwordHash,
-      createdAt: new Date(),
-    });
+      createdAt: new Date
+    })
+
+    await userRepository.create(newUser);
 
     const { user } = await sut.execute({
       email: 'john@doe.com',
@@ -46,12 +48,12 @@ describe('Authenticate Use Case', () => {
   it('Should not able to authenticate with wrong password', async () => {
     const passwordHash = await cryptoProvider.hash('12345');
 
-    await userRepository.register({
+    await userRepository.create({
       id: '01',
       name: 'john',
       email: 'john@doe.com',
       password: passwordHash,
-      createdAt: new Date(),
+      createdAt: ,
     });
 
     await expect(() =>

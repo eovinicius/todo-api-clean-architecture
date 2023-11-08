@@ -27,7 +27,7 @@ export class RegisterUserUseCase {
       password: hashedPassoword,
     });
 
-    await this.userRepository.register(user);
+    await this.userRepository.create(user);
 
     return {
       user,

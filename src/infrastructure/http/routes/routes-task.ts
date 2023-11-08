@@ -11,4 +11,4 @@ routesTask.use(authMiddleware);
 routesTask.post('/create', CreateTaskController.handle);
 routesTask.get('/', FindAllTaskController.handle);
 routesTask.get('/:id', FindTaskByIdController.handle);
-routesTask.put('/:id', UpdateTaskController.handle);
+routesTask.put('/:userId', UpdateTaskController.handle);

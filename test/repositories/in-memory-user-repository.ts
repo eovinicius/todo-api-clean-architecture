@@ -1,12 +1,11 @@
-import { UserRepository } from '../../application/repositories/user-repository';
-import { User } from '../../domain/entities/user';
+import { UserRepository } from '../../src/application/repositories/user-repository';
+import { User } from '../../src/domain/entities/user';
 
 export class InMemoryUserRepository implements UserRepository {
   public items: User[] = [];
 
-  async register(user: User): Promise<User> {
+  async create(user: User): Promise<void> {
     this.items.push(user);
-    return user;
   }
 
   async findById(id: string): Promise<User | null> {
@@ -25,7 +24,7 @@ export class InMemoryUserRepository implements UserRepository {
     return user;
   }
 
-  async update(user: User): Promise<void> {
+  async save(user: User): Promise<void> {
     const index = this.items.findIndex((u) => u.id === user.id);
 
     if (index !== -1) {

@@ -1,8 +1,8 @@
 import { User } from '../../domain/entities/user';
 
 export interface UserRepository {
-  register(user: User): Promise<User>;
+  create(user: User): Promise<void>;
+  save(user: User): Promise<void>;
   findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
-  update(user: User): Promise<void>;
 }

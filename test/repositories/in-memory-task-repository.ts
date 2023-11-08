@@ -1,5 +1,5 @@
-import { TaskRepository } from '../../application/repositories/task-repository';
-import { Task } from '../../domain/entities/tasks';
+import { TaskRepository } from '../../src/application/repositories/task-repository';
+import { Task } from '../../src/domain/entities/tasks';
 
 export class InMemoryTaskRepository implements TaskRepository {
   public item: Task[] = [];
@@ -25,7 +25,7 @@ export class InMemoryTaskRepository implements TaskRepository {
 
     return task;
   }
-  async update(task: Task): Promise<void> {
+  async save(task: Task): Promise<void> {
     throw new Error('Method not implemented.');
   }
   async delete(id: string): Promise<void> {

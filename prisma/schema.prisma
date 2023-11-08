@@ -22,12 +22,13 @@ model User {
 }
 
 model Task {
-  id        String   @id
-  userId    String   @map("user_id")
+  id        String    @id
+  userId    String    @map("user_id")
   title     String
   completed Boolean
-  createdAt DateTime @map("created_at")
-  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime  @map("created_at")
+  updatedAt DateTime? @map("updated_at")
+  user      User      @relation(fields: [userId], references: [id])
 
   @@map("tasks")
 }

@@ -16,6 +16,7 @@ CREATE TABLE "tasks" (
     "title" TEXT NOT NULL,
     "completed" BOOLEAN NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "tasks_pkey" PRIMARY KEY ("id")
 );

@@ -1,8 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { CreateTaskUseCase } from './create-task-use-case';
 import { AppError } from '../error/app-error';
-import { InMemoryUserRepository } from '../../test/repositories/in-memory-user-repository';
-import { InMemoryTaskRepository } from '../../test/repositories/in-memory-task-repository';
+import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user-repository';
+import { InMemoryTaskRepository } from '../../../test/repositories/in-memory-task-repository';
+
 
 let userRepository: InMemoryUserRepository;
 let taskRepository: InMemoryTaskRepository;
