@@ -9,7 +9,7 @@ export class PrismaTaskMapper {
       completed: task.completed,
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
-    });
+    }, task.id);
   }
 
   public static ToPrisma(task: Task): Prisma.TaskUncheckedCreateInput {

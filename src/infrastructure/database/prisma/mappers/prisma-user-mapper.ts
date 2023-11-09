@@ -8,7 +8,7 @@ export class PrismaUserMapper {
       email: user.email,
       password: user.password,
       createdAt: user.createdAt,
-    });
+    }, user.id);
   }
 
   public static ToPrisma(user: User): Prisma.UserUncheckedCreateInput {
