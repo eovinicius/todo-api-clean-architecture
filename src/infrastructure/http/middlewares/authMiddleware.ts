@@ -1,8 +1,7 @@
-import 'dotenv/config';
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 import { AppError } from '../../../application/error/app-error';
-
+import { env } from '../../env';
 
 interface IPayload {
   iat: number;
@@ -19,7 +18,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
     if (!token) throw new AppError(401, 'Unauthorized');
 
-    const secret = process.env.JWT_SECRET ?? '';
+    const secret = env.JWT_SECRET;
 
     const { sub } = verify(token, secret) as IPayload;
 

@@ -1,7 +1,7 @@
-import 'dotenv/config';
 import { Request, Response } from 'express';
 import { MakeAuthenticateUser } from '../../../application/factories/make-authenticate';
 import { sign } from 'jsonwebtoken';
+import { env } from '../../env';
 
 interface IRequest {
   email: string;
@@ -16,9 +16,7 @@ export class AuthenticateUserController {
 
     const { user } = await authenticateUserUseCase.execute(data);
 
-    const secret = process.env.JWT_SECRET ?? '';
-
-    const token = sign({}, secret, {
+    const token = sign({}, env.JWT_SECRET, {
       subject: user.id,
       expiresIn: '1h',
     });
