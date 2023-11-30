@@ -2,7 +2,8 @@ import { describe, expect, it, beforeEach } from 'vitest';
 import { AppError } from '../error/app-error';
 import { GetUserProfileUseCase } from './get-user-profile-use-case';
 import { BcryptCryptoProvider } from '../../infrastructure/providers/bcrypt-crypto-provider';
-import { InMemoryUserRepository } from '../../test/repositories/in-memory-user-repository';
+import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user-repository';
+
 
 let userRepository: InMemoryUserRepository;
 let cryptoProvider: BcryptCryptoProvider;
