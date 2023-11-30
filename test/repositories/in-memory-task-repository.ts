@@ -4,10 +4,10 @@ import { Task } from '../../src/domain/entities/tasks';
 export class InMemoryTaskRepository implements TaskRepository {
   public item: Task[] = [];
 
-  async create(task: Task): Promise<Task> {
-    this.item.push(task);
-    return task;
+  async create(task: Task): Promise<void> {
+    this.item.push();
   }
+
   async findAll(): Promise<Task[]> {
     return this.item;
   }
