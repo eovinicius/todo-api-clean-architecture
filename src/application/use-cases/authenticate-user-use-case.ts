@@ -2,7 +2,6 @@ import { AppError } from '../error/app-error';
 import { UserRepository } from '../repositories/user-repository';
 import { CryptoProvider } from '../providers/crypto-provider';
 import { User } from '../../domain/entities/user';
-import { Either, right, left } from '../../core/either';
 
 interface AuthenticateUserUseCaseRequest {
   email: string;

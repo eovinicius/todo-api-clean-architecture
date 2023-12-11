@@ -1,66 +1,82 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { UserRepository } from '../repositories/user-repository';
+import { CryptoProvider } from '../providers/crypto-provider';
 import { AuthenticateUserUseCase } from './authenticate-user-use-case';
-import { AppError } from '../error/app-error';
-import { BcryptCryptoProvider } from '../../infrastructure/providers/bcrypt-crypto-provider';
-import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user-repository';
 import { User } from '../../domain/entities/user';
 
-let userRepository: InMemoryUserRepository;
-let cryptoProvider: BcryptCryptoProvider;
-let sut: AuthenticateUserUseCase;
+interface AuthenticateUserUseCaseRequest {
+  email: string;
+  password: string;
+}
 
-describe('Authenticate Use Case', () => {
-  beforeEach(() => {
-    userRepository = new InMemoryUserRepository();
-    cryptoProvider = new BcryptCryptoProvider();
-    sut = new AuthenticateUserUseCase(userRepository, cryptoProvider);
-  });
-
-  it('Should be able to authenticate', async () => {
-    const passwordHash = await cryptoProvider.hash('12345');
-
-    const newUser = User.create({
-      name: 'vinicius',
-      email: 'vinicius@mail.com',
-      password: passwordHash,
-      createdAt: new Date
-    })
-
-    await userRepository.create(newUser);
-
-    const { user } = await sut.execute({
-      email: 'john@doe.com',
+// Mocking UserRepository
+class MockUserRepository implements UserRepository {
+  create(user: User): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  save(user: User): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  findById(id: string): Promise<User | null> {
+    throw new Error('Method not implemented.');
+  }
+  async findByEmail(email: string): Promise<User | null> {
+    return User.create({
+      name: 'john doe',
+      email: 'johndoe@gmail.com',
       password: '12345',
     });
+  }
+}
 
-    expect(user.id).toEqual(expect.any(String));
+// Mocking CryptoProvider
+class MockCryptoProvider implements CryptoProvider {
+  hash(password: string): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
+  async compare(password: string, hashedPassword: string): Promise<boolean> {
+    // Replace this with your own mock logic for password comparison
+    return password === hashedPassword;
+  }
+}
+
+describe('AuthenticateUserUseCase', () => {
+  let userRepository: UserRepository;
+  let cryptoProvider: CryptoProvider;
+  let authenticateUserUseCase: AuthenticateUserUseCase;
+
+  beforeEach(() => {
+    userRepository = new MockUserRepository();
+    cryptoProvider = new MockCryptoProvider();
+    authenticateUserUseCase = new AuthenticateUserUseCase(userRepository, cryptoProvider);
   });
 
-  it('Should not able to authenticate with wrong email', async () => {
-    await expect(() =>
-      sut.execute({
-        email: 'john@doe.com',
-        password: '12345',
-      }),
-    ).rejects.toBeInstanceOf(AppError);
+  it('should authenticate user with valid credentials', async () => {
+    const validRequest: AuthenticateUserUseCaseRequest = {
+      email: 'example@example.com',
+      password: 'password',
+    };
+
+    const response = await authenticateUserUseCase.execute(validRequest);
+
+    expect(response.user.email).toBe(validRequest.email);
   });
 
-  it('Should not able to authenticate with wrong password', async () => {
-    const passwordHash = await cryptoProvider.hash('12345');
+  it('should throw AppError when email is incorrect', async () => {
+    const invalidRequest: AuthenticateUserUseCaseRequest = {
+      email: 'wrong@example.com',
+      password: 'password',
+    };
 
-    await userRepository.create({
-      id: '01',
-      name: 'john',
-      email: 'john@doe.com',
-      password: passwordHash,
-      createdAt: ,
-    });
+    await expect(authenticateUserUseCase.execute(invalidRequest)).rejects.toThrow(AppError);
+  });
 
-    await expect(() =>
-      sut.execute({
-        email: 'john@doe.com',
-        password: '123123',
-      }),
-    ).rejects.toBeInstanceOf(AppError);
+  it('should throw AppError when password is incorrect', async () => {
+    const invalidRequest: AuthenticateUserUseCaseRequest = {
+      email: 'example@example.com',
+      password: 'wrongPassword',
+    };
+
+    await expect(authenticateUserUseCase.execute(invalidRequest)).rejects.toThrow(AppError);
   });
 });
